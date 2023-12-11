@@ -21,9 +21,17 @@ function App() {
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT);
     ctx.fillStyle = "#000";
+    const canvasRect = canvas.getBoundingClientRect();
 
     const handleMousedown = (e: MouseEvent) => {
-      ctx.arc(e.clientX, e.clientY, PEN_SIZE / 2, 0, Math.PI * 2);
+      ctx.beginPath();
+      ctx.arc(
+        e.clientX - canvasRect.x,
+        e.clientY - canvasRect.y,
+        PEN_SIZE / 2,
+        0,
+        Math.PI * 2
+      );
       ctx.fill();
     };
 
