@@ -22,8 +22,9 @@ function App() {
     ctx.fillRect(0, 0, DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT);
     ctx.fillStyle = "#000";
     const canvasRect = canvas.getBoundingClientRect();
+    let dragging = false;
 
-    const handleMousedown = (e: MouseEvent) => {
+    const draw = (e: MouseEvent) => {
       ctx.beginPath();
       ctx.arc(
         e.clientX - canvasRect.x,
@@ -34,8 +35,26 @@ function App() {
       );
       ctx.fill();
     };
+    const handleMousedown = (e: MouseEvent) => {
+      draw(e);
+      dragging = true;
+    };
+    const handleMousemove = (e: MouseEvent) => {
+      if (!dragging) return;
+      draw(e);
+    };
+    const handleMouseup = (e: MouseEvent) => {
+      if (!dragging) return;
+      dragging = false;
+    };
 
     canvas.addEventListener("mousedown", handleMousedown);
+    canvas.addEventListener("mousemove", handleMousemove);
+    window.addEventListener("mouseup", handleMouseup);
+
+    return () => {
+      window.removeEventListener("mouseup", handleMouseup);
+    };
   }, []);
 
   return (
