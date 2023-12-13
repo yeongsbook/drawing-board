@@ -26,31 +26,26 @@ function App() {
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.lineWidth = PEN_SIZE;
+    ctx.translate(-canvasRect.x, -canvasRect.y);
 
     const draw = (e: MouseEvent) => {
       ctx.beginPath();
-      ctx.arc(
-        e.clientX - canvasRect.x,
-        e.clientY - canvasRect.y,
-        PEN_SIZE / 2,
-        0,
-        Math.PI * 2
-      );
+      ctx.arc(e.clientX, e.clientY, PEN_SIZE / 2, 0, Math.PI * 2);
       ctx.fill();
     };
     const handleMousedown = (e: MouseEvent) => {
       draw(e);
       ctx.beginPath();
-      ctx.moveTo(e.clientX - canvasRect.x, e.clientY - canvasRect.y);
+      ctx.moveTo(e.clientX, e.clientY);
       dragging = true;
     };
     const handleMousemove = (e: MouseEvent) => {
       if (!dragging) return;
-      ctx.lineTo(e.clientX - canvasRect.x, e.clientY - canvasRect.y);
+      ctx.lineTo(e.clientX, e.clientY);
       ctx.stroke();
       ctx.closePath();
       ctx.beginPath();
-      ctx.moveTo(e.clientX - canvasRect.x, e.clientY - canvasRect.y);
+      ctx.moveTo(e.clientX, e.clientY);
     };
     const handleMouseup = (e: MouseEvent) => {
       if (!dragging) return;
@@ -59,10 +54,11 @@ function App() {
     };
 
     canvas.addEventListener("mousedown", handleMousedown);
-    canvas.addEventListener("mousemove", handleMousemove);
+    window.addEventListener("mousemove", handleMousemove);
     window.addEventListener("mouseup", handleMouseup);
 
     return () => {
+      window.removeEventListener("mousemove", handleMouseup);
       window.removeEventListener("mouseup", handleMouseup);
     };
   }, []);
