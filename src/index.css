@@ -1,8 +1,22 @@
 body {
   margin: 0;
-  padding: 10px;
   background: #ccc;
 }
 canvas {
   display: block;
+}
+.menu {
+  background: #fff;
+}
+.menu-item {
+  padding: 10px;
+}
+.menu-content {
+  margin-top: 4px;
+}
+.range-input {
+  width: 100px;
+}
+.canvas-area {
+  padding: 10px;
 }

@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const DEFAULT_CANVAS_WIDTH = 600;
 const DEFAULT_CANVAS_HEIGHT = 300;
-const PEN_SIZE = 5;
+const DEFAULT_PEN_SIZE = 5;
 
 function App() {
+  const [penSize, setPenSize] = useState<number>(DEFAULT_PEN_SIZE);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -25,12 +26,12 @@ function App() {
     let dragging = false;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    ctx.lineWidth = PEN_SIZE;
+    ctx.lineWidth = penSize;
     ctx.translate(-canvasRect.x, -canvasRect.y);
 
     const draw = (e: MouseEvent) => {
       ctx.beginPath();
-      ctx.arc(e.clientX, e.clientY, PEN_SIZE / 2, 0, Math.PI * 2);
+      ctx.arc(e.clientX, e.clientY, penSize / 2, 0, Math.PI * 2);
       ctx.fill();
     };
     const handleMousedown = (e: MouseEvent) => {
@@ -58,14 +59,36 @@ function App() {
     window.addEventListener("mouseup", handleMouseup);
 
     return () => {
+      canvas.removeEventListener("mousedown", handleMousedown);
       window.removeEventListener("mousemove", handleMouseup);
       window.removeEventListener("mouseup", handleMouseup);
     };
-  }, []);
+  }, [penSize]);
+
+  const handleChangePenSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPenSize(parseInt(e.target.value));
+  };
 
   return (
     <div>
-      <canvas ref={canvasRef} />
+      <div className="menu">
+        <div className="menu-item">
+          <strong className="menu-title">펜 굵기 {penSize}</strong>
+          <div className="menu-content">
+            <input
+              type="range"
+              min={1}
+              max={30}
+              value={penSize}
+              className="range-input"
+              onChange={handleChangePenSize}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="canvas-area">
+        <canvas ref={canvasRef} />
+      </div>
     </div>
   );
 }
