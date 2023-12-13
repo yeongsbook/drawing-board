@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 const DEFAULT_CANVAS_WIDTH = 600;
 const DEFAULT_CANVAS_HEIGHT = 300;
-const PEN_SIZE = 30;
+const PEN_SIZE = 5;
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,6 +23,9 @@ function App() {
     ctx.fillStyle = "#000";
     const canvasRect = canvas.getBoundingClientRect();
     let dragging = false;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = PEN_SIZE;
 
     const draw = (e: MouseEvent) => {
       ctx.beginPath();
@@ -37,14 +40,21 @@ function App() {
     };
     const handleMousedown = (e: MouseEvent) => {
       draw(e);
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - canvasRect.x, e.clientY - canvasRect.y);
       dragging = true;
     };
     const handleMousemove = (e: MouseEvent) => {
       if (!dragging) return;
-      draw(e);
+      ctx.lineTo(e.clientX - canvasRect.x, e.clientY - canvasRect.y);
+      ctx.stroke();
+      ctx.closePath();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - canvasRect.x, e.clientY - canvasRect.y);
     };
     const handleMouseup = (e: MouseEvent) => {
       if (!dragging) return;
+      ctx.closePath();
       dragging = false;
     };
 
